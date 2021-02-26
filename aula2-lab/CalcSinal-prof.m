@@ -1,54 +1,54 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% 0 - Problema
 %
-% decomposição de um sinal g(t) em sinais harmônicos
+% decomposiï¿½ï¿½o de um sinal g(t) em sinais harmï¿½nicos
 %
 % g(t) = sum_{n=1}^N cn xn(t) --> cn
 %
-% 1. Integral simbólica - variável t:tempo e n:frequência
-% 2. Substituição de valores de n
-% 3. Visualização dos resultados
-% 4. Sintetizar a função g(t) - somatória (?)
-% 5. Validação: o resultado faz sentido?
+% 1. Integral simbï¿½lica - variï¿½vel t:tempo e n:frequï¿½ncia
+% 2. Substituiï¿½ï¿½o de valores de n
+% 3. Visualizaï¿½ï¿½o dos resultados
+% 4. Sintetizar a funï¿½ï¿½o g(t) - somatï¿½ria (?)
+% 5. Validaï¿½ï¿½o: o resultado faz sentido?
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% 1 - Boas práticas
+%%%%% 1 - Boas prï¿½ticas
 
-clear all;         % limpa as variáveis(todas)
+clear all;         % limpa as variï¿½veis(todas)
 close all;         % limpo todas as figuras
 clc;               % limpa visualmente a tela
 
 %%% Bibliotecas
 
-pkg load symbolic; % carrega o pacote simbólico
+pkg load symbolic; % carrega o pacote simbï¿½lico
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% 2 - definir g(t)
 %
 % onda quadrada - segmentos
 
-To  = 2*pi;      % período da onda quadrada
+To  = 2*pi;      % perï¿½odo da onda quadrada
 to  = -pi/2;     % tempo inicial de g(t)
 
 
-tau = To/2;      % duração do nível alto de g(t)
-th  = to + tau;  % tempo que termina o nível alto de g(t)
-tl  = to + To;   % tempo que termina o nível baixo de g(t)
+tau = To/2;      % duraï¿½ï¿½o do nï¿½vel alto de g(t)
+th  = to + tau;  % tempo que termina o nï¿½vel alto de g(t)
+tl  = to + To;   % tempo que termina o nï¿½vel baixo de g(t)
 
-Ah  = +1;        % amplitude em nível alto
-Al  = -1;        % amplitude em nível baixo
+Ah  = +1;        % amplitude em nï¿½vel alto
+Al  = -1;        % amplitude em nï¿½vel baixo
 
-%%% Determinando parâmetros
+%%% Determinando parï¿½metros
 
-fo  = 1/To;      % determinando a frequência de g(t)
-wo  = 2*pi*fo;   % determinando a frequência angular
+fo  = 1/To;      % determinando a frequï¿½ncia de g(t)
+wo  = 2*pi*fo;   % determinando a frequï¿½ncia angular
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% 3 - Cálculo do c
+%%%%% 3 - Cï¿½lculo do c
 %
-% Integral simbólica - t
+% Integral simbï¿½lica - t
 %
 % Symbolic pkg v2.9.0 
 % Python communication link active, SymPy v1.5.1.
@@ -74,9 +74,9 @@ Iden = int(cos(t)*cos(t),t,0,To);
 c   = Inum/Iden;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% 3 - Cálculo do cn - analisador
+%%%%% 3 - Cï¿½lculo do cn - analisador
 %
-% Integral simbólica - t:tempo e n:frequência
+% Integral simbï¿½lica - t:tempo e n:frequï¿½ncia
 %
 % Symbolic pkg v2.9.0 
 % Python communication link active, SymPy v1.5.1.
@@ -102,12 +102,12 @@ Iden = int(cos(n*t)*cos(n*t),t,0,To);
 cn   = Inum/Iden;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% 5 - Substituição dos valores de n
+%%%%% 5 - Substituiï¿½ï¿½o dos valores de n
 
 % n = [1,2,3,4,5,6,7,8,9,10];
 
-N   = 100;              % número de termos da decomposição
-n   = [1:1:N];          % geração do vetor n
+N   = 100;              % nï¿½mero de termos da decomposiï¿½ï¿½o
+n   = [1:1:N];          % geraï¿½ï¿½o do vetor n
 
 cnNumerico = eval(cn);  % determina cn numericamente
 
@@ -119,7 +119,7 @@ figure()
 stem(n,cnNumerico,'linewidth',2);             % plot de valores discretos
 xlabel('valores de n');         % label eixo x   
 ylabel('Valores de cn');        % label eixo y
-title('Decomposição de g(t)');  % título do gráfico
+title('Decomposiï¿½ï¿½o de g(t)');  % tï¿½tulo do grï¿½fico
 grid;                           % gride
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,38 +127,38 @@ grid;                           % gride
 %
 % g(t) = c1 cos(t) + 0 cos(2t) + c3 cos(3t) + 0 cos(4t) +...
 % 
-% g(t) --> cn: [c1 0 c3 0 c5 0 c7 0 c9 0] - análise
+% g(t) --> cn: [c1 0 c3 0 c5 0 c7 0 c9 0] - anï¿½lise
 %
-% cn: [c1 0 c3 0 c5 0 c7 0 c9 0] --> g(t) - síntese
+% cn: [c1 0 c3 0 c5 0 c7 0 c9 0] --> g(t) - sï¿½ntese
 
 M     = 1000;                       % sample rate - pontos
 tempo = linspace(-To,To,M);         % vetor linear
 
-g = cnNumerico(1)*cos(tempo);             % primeira harmônica
-g = g + cnNumerico(2)*cos(2*tempo);       % segunda harmônica
-g = g + cnNumerico(3)*cos(3*tempo);       % terceira harmônica
-g = g + cnNumerico(4)*cos(4*tempo);       % quarta harmônica
-g = g + cnNumerico(5)*cos(5*tempo);       % quinta harmônica
-g = g + cnNumerico(6)*cos(6*tempo);       % sexta harmônica
-g = g + cnNumerico(7)*cos(7*tempo);       % sétima harmônica
-g = g + cnNumerico(8)*cos(8*tempo);       % oitava harmônica
-g = g + cnNumerico(9)*cos(9*tempo);       % nona harmônica
-g = g + cnNumerico(10)*cos(10*tempo);     % décima harmônica
+g = cnNumerico(1)*cos(tempo);             % primeira harmï¿½nica
+g = g + cnNumerico(2)*cos(2*tempo);       % segunda harmï¿½nica
+g = g + cnNumerico(3)*cos(3*tempo);       % terceira harmï¿½nica
+g = g + cnNumerico(4)*cos(4*tempo);       % quarta harmï¿½nica
+g = g + cnNumerico(5)*cos(5*tempo);       % quinta harmï¿½nica
+g = g + cnNumerico(6)*cos(6*tempo);       % sexta harmï¿½nica
+g = g + cnNumerico(7)*cos(7*tempo);       % sï¿½tima harmï¿½nica
+g = g + cnNumerico(8)*cos(8*tempo);       % oitava harmï¿½nica
+g = g + cnNumerico(9)*cos(9*tempo);       % nona harmï¿½nica
+g = g + cnNumerico(10)*cos(10*tempo);     % dï¿½cima harmï¿½nica
 
 figure()
 
 plot(tempo,g,'linewidth',2);    % plot de valores continuos (interpolar)
 xlabel('tempo');                % label eixo x   
 ylabel('amoplitude');           % label eixo y
-title('Sintese de g(t)');       % título do gráfico
+title('Sintese de g(t)');       % tï¿½tulo do grï¿½fico
 grid;  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% 8 - Sintetizador usando for
 
-g1 = cnNumerico(1)*cos(tempo);    % primeira harmônica
-                                  % incia a variável g1                         
+g1 = cnNumerico(1)*cos(tempo);    % primeira harmï¿½nica
+                                  % incia a variï¿½vel g1                         
                                   
 for k = 2 : N
   
@@ -171,6 +171,6 @@ figure()
 plot(tempo,g1,'linewidth',2,'k-');   % plot de valores continuos (interpolar)
 xlabel('tempo');                     % label eixo x   
 ylabel('amoplitude');                % label eixo y
-title('Sintese de g(t)');            % título do gráfico
+title('Sintese de g(t)');            % tï¿½tulo do grï¿½fico
 grid;  
 
