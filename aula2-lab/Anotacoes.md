@@ -30,7 +30,7 @@
     plot(tempo,g,'linewidth',2);    % plot de valores continuos (interpolar)
     xlabel('tempo');                % label eixo x   
     ylabel('amoplitude');           % label eixo y
-    title('Sintese de g(t)');       % t�tulo do gr�fico
+    title('Sintese de g(t)');       % título do gráfico
     grid;
     ```
 
