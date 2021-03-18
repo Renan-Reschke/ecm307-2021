@@ -65,17 +65,14 @@
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Problema 3 - c1, c-1, p1 e r1
-  n = [-1 1];
+  n = [-1 +1];
   DnNum = eval(Dn);
   
-  %%% Sintetizando o sinal
-  sinal1 = 0;
-  for k = 0 : (length(n)-1)
-    sinal1 += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
-  end
+  %%% Sintetizando p1
+  p1 = DnNum(1)*exp(j*n(1)*wo*tempo) + DnNum(2)*exp(j*n(2)*wo*tempo);
     
   %%% Determinar erro r1 entre sinal e gt
-  r1 = gt - sinal1;
+  r1 = gt - p1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Problema 4 - c1, c-1, p1 e r1
@@ -83,13 +80,13 @@
   DnNum = eval(Dn);
   
   %%% Sintetizando o sinal
-  sinal2 = 0;
+  p2 = 0;
   for k = 0 : (length(n)-1)
-    sinal2 += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
+    p2 += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
   end
     
   %%% Determinar erro r1 entre sinal e gt
-  r2 = gt - sinal2;
+  r2 = gt - p2;
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Problema 5 - c1, c-1, p1 e r1
@@ -97,14 +94,13 @@
   DnNum = eval(Dn);
   
   %%% Sintetizando o sinal
-  sinaln = 0;
+  pn = 0;
   for k = 0 : (length(n)-1)
-    sinaln += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
-    sinaln += DnNum(k+1)*exp(j*(-n(k+1))*wo*tempo);
+    pn += DnNum(k+1)*exp(j*n(k+1)*wo*tempo) + DnNum(k+1)*exp(j*(-n(k+1))*wo*tempo);
   end
     
   %%% Determinar erro r1 entre sinal e gt
-  rn = gt - sinaln;
+  rn = gt - pn;
   
   
   
@@ -116,30 +112,33 @@
   subplot(3,1,1);
   plot(tempo,gt,'k-','linewidth',3)     % g(t)
   hold;
-  plot(tempo,sinal1,'b-','linewidth',3) % sinal sintetizado
-  plot(tempo,r1,'g-','linewidth',3)     % residuo
+  plot(tempo,p1,'b-','linewidth',3)     % sinal sintetizado
+  plot(tempo,r1,'r-','linewidth',3)     % residuo
   xlabel('Tempo em segundos')           % tempo em segundos
-  ylabel('Amplitude')                   % amplitude em volts
+  ylabel('Amplitude em volts')          % amplitude em volts
   title('Tópico 3')                     % título
   grid
-  
+  legend('g(t)','p1','r1')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
   subplot(3,1,2);
-  plot(tempo,gt,'k-','linewidth',3)     % g(t)
+  plot(tempo,gt,'k-','linewidth',3);    % g(t)
   hold;
-  plot(tempo,sinal2,'b-','linewidth',3) % sinal sintetizado
-  plot(tempo,r2,'g-','linewidth',3)     % residuo
-  xlabel('Tempo em segundos')           % tempo em segundos
-  ylabel('Amplitude')                   % amplitude em volts
-  title('Tópico 4')                     % título
-  grid
-  
+  plot(tempo,p2,'b-','linewidth',3);    % sinal sintetizado
+  plot(tempo,r2,'r-','linewidth',3);    % residuo
+  xlabel('Tempo em segundos');          % tempo em segundos
+  ylabel('Amplitude em volts');         % amplitude em volts
+  title('Tópico 4');                    % título
+  grid;
+  legend('g(t)','p2','r2');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
   subplot(3,1,3);
   plot(tempo,gt,'k-','linewidth',3)     % g(t)
   hold;
-  plot(tempo,sinaln,'b-','linewidth',3) % sinal sintetizado
-  plot(tempo,rn,'g-','linewidth',3)     % residuo
+  plot(tempo,pn,'b-','linewidth',3)     % sinal sintetizado
+  plot(tempo,rn,'r-','linewidth',3)     % residuo
   xlabel('Tempo em segundos')           % tempo em segundos
-  ylabel('Amplitude')                   % amplitude em volts
+  ylabel('Amplitude em volts')          % amplitude em volts
   title('Tópico 5 (n = 100)')           % título
   grid
-
+  legend('g(t)','p100','r100')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
