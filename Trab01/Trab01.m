@@ -5,15 +5,13 @@
 %% Constantes; carregar bibliotecas;...
 %%
 %%% Limpeza
-display('1 - Preparação do código ')
-
-clc;          % limpa visual da tela de comandos
-close all;    % limpa as figuras
-clear all;    % limpa as variáveis
+  clc;          % limpa visual da tela de comandos
+  close all;    % limpa as figuras
+  clear all;    % limpa as variáveis
 
 %%% Carregar bibliotecas
 
-pkg load symbolic;  % biblioteca simbólica
+  pkg load symbolic;  % biblioteca simbólica
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,16 +26,14 @@ pkg load symbolic;  % biblioteca simbólica
 %%  Dn = 1/To int_0^To g(t) exp(-j n wo t) dt
 %%
 
-display('2 - calcular o valor de Dn')
-syms n wo to To t  % t - tempo variável simbólica
+  syms n wo to To t  % t - tempo variável simbólica
 
-%%% numerador de Dn
-
-Inum    = int(exp(-(1+j*n*wo)*t),t,to,to+To);
+% Numerador de Dn
+  Inum = int(exp(-(1+j*n*wo)*t),t,to,to+To); % integral de g(t)*gn(t)dt
 
 %%% determinando Dn
 
-Dn = Inum/To;     % da teoria - Denominador = To
+  Dn = Inum/To;     % da teoria - Denominador = To
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,64 +42,104 @@ Dn = Inum/To;     % da teoria - Denominador = To
 %% Um sinal periodico g(t) e definido pela eq 2 no intervalo 0 <= t <= 1 que
 %% representa exatamente a eq de um per?odo deste sinal que equivale a T0 = 1s.
 %% 
-%% Definir a onda quadrada
-display('3 - Definindo valores numericos de g(t)')
+%%
 
-To = 1;  % período da onda quadrada
-to = 0; % instante inicial de g(t)
+  To = 1; % período da onda
+  to = 0; % instante inicial de g(t)
 
 %%% Parâmetros calculados
 
-fo = 1/To;    % frequência da onda quadrada
-wo = 2*pi*fo; % frequência angular de g(t)
+  fo = 1/To;    % frequência da onda quadrada
+  wo = 2*pi*fo; % frequência angular de g(t)
 
 %%% Funcao teorica g(t)
-
-gtTeo = @(t) exp(-t);    % cria g(t)
+  gtTeo = @(t) exp(-t);    % cria g(t)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 4 - Determinando numericamente os valores
-M = 1000;
-Ts = To/M;
-tempo = [0:Ts:To];
-
-N = 10;
-n = [-N:1:N];
-DnNum = eval(Dn);
-
-%%% Sintetizando o sinal
-sinal = 0;
-for k = 0 : 2*N
-  sinal += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
-end
-
-%%% Determinar g(t)
-gt = gtTeo(tempo);
-
-%%% Determinar erro r1 entre sinal e gt
-
-r1 = gt - sinal;
+  M = 1000;
+  Ts = To/M;
+  tempo = [to:Ts:To];
+  %%% Determinar g(t)
+  gt = gtTeo(tempo);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Problema 3 - c1, c-1, p1 e r1
+  n = [-1 1];
+  DnNum = eval(Dn);
+  
+  %%% Sintetizando o sinal
+  sinal1 = 0;
+  for k = 0 : (length(n)-1)
+    sinal1 += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
+  end
+    
+  %%% Determinar erro r1 entre sinal e gt
+  r1 = gt - sinal1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 5 - Visualizar r1 (verde), sinal (azul) e gt (preto)
-figure(1)
-
-plot(tempo,gt,'k-','linewidth',3)     % configura plot(x,y, cor azul e linha cheia)
-hold;
-plot(tempo,sinal,'b-','linewidth',3)
-plot(tempo,r1,'g-','linewidth',3)
-xlabel('Tempo em segundos')           % tempo em segundos
-ylabel('Amplitude')                   % amplitude em volts
-title('Sinal g(t) sinteizado')        % título
-grid
-
-
-
+%% Problema 4 - c1, c-1, p1 e r1
+  n = [-2 -1 1 2];
+  DnNum = eval(Dn);
+  
+  %%% Sintetizando o sinal
+  sinal2 = 0;
+  for k = 0 : (length(n)-1)
+    sinal2 += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
+  end
+    
+  %%% Determinar erro r1 entre sinal e gt
+  r2 = gt - sinal2;
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 4 - Sintetizando o sinal
-
-
-
-
+%% Problema 5 - c1, c-1, p1 e r1
+  n = [1:1:100];
+  DnNum = eval(Dn);
+  
+  %%% Sintetizando o sinal
+  sinaln = 0;
+  for k = 0 : (length(n)-1)
+    sinaln += DnNum(k+1)*exp(j*n(k+1)*wo*tempo);
+    sinaln += DnNum(k+1)*exp(j*(-n(k+1))*wo*tempo);
+  end
+    
+  %%% Determinar erro r1 entre sinal e gt
+  rn = gt - sinaln;
+  
+  
+  
+  
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  
+%% Visualização dos tópicos 3,4 e 5  
+  figure(1)
+  subplot(3,1,1);
+  plot(tempo,gt,'k-','linewidth',3)     % g(t)
+  hold;
+  plot(tempo,sinal1,'b-','linewidth',3) % sinal sintetizado
+  plot(tempo,r1,'g-','linewidth',3)     % residuo
+  xlabel('Tempo em segundos')           % tempo em segundos
+  ylabel('Amplitude')                   % amplitude em volts
+  title('Tópico 3')                     % título
+  grid
+  
+  subplot(3,1,2);
+  plot(tempo,gt,'k-','linewidth',3)     % g(t)
+  hold;
+  plot(tempo,sinal2,'b-','linewidth',3) % sinal sintetizado
+  plot(tempo,r2,'g-','linewidth',3)     % residuo
+  xlabel('Tempo em segundos')           % tempo em segundos
+  ylabel('Amplitude')                   % amplitude em volts
+  title('Tópico 4')                     % título
+  grid
+  
+  subplot(3,1,3);
+  plot(tempo,gt,'k-','linewidth',3)     % g(t)
+  hold;
+  plot(tempo,sinaln,'b-','linewidth',3) % sinal sintetizado
+  plot(tempo,rn,'g-','linewidth',3)     % residuo
+  xlabel('Tempo em segundos')           % tempo em segundos
+  ylabel('Amplitude')                   % amplitude em volts
+  title('Tópico 5 (n = 100)')           % título
+  grid
+
