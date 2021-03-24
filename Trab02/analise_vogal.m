@@ -73,7 +73,7 @@ fprintf('\nDuracao da analise por for: ');
 toc;                                    % estima o tempo de duracao do for
 
 
-%%% Utilizando produto Matricial - Desenvolvido por Guilherme Samuel%%%%%%%%%%%%
+%%% Utilizando produto Matricial - Desenvolvido com ajuda de Guilherme Samuel%%%%%%%%%%%%
 tic;
 wn                = exp(-1i*2*pi/N);                  % Definindo wn
 Matriz_jotas      = wn*ones(N, N);                    % Matriz NxN wn
