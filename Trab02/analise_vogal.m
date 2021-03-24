@@ -10,10 +10,16 @@
 %%  Trabalho em Octave *.m
 %%
 %%  a. Analisar as cinco vogais: Xa, Xe, Xi, Xo, e Xu.
+%%    Analises feitas uma a uma, gráficos salvos em png.
 %%  b. Os tempos de execucao de cada vogal.
+%%    Dados presentes no pdf junto a esse arquivo (analise_vogais.pdf).
 %%  c. O que voce observa de diferente em cada serie de Fourier.
+%%    Cada serie de Fourier destaca frequências diferentes para cada vogal.
 %%  d. Voce conseguiria analisar no tempo?
+%%    Muito dificil analisar as vogais (audios em geral) no tempo, porém a serie
+%%   de Fourier permite uma análise melhor a partir das frequências.
 %%  e. Como voce transformaria o "for" em produto matricial como foi feito na teoria?
+%%    Resolução presente na parte inferior do código, desenvolvido com a ajuda do aluno Guilherme Samuel.
 %%  
 %%  Entrega 23/03 ate 23:59 - individual
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,17 +90,17 @@ Matriz_expoentes  = [0:1:N-1]'*[0:1:N-1];
 % A Matriz_fourier é obtida elevando cada elemento da Matriz_jotas por cada
 % elemento da Matriz_expoentes
 % A Matriz_fourier será do tipo:
-% 1   1           1            1        ...    1
-% 1 wn^1         wn^2         wn^3      ...   wn^{N-1}
-% 1 wn^2         wn^4         wn^6      ...   wn^{2(N-1)}
-% 1 wn^3         wn^6         wn^9      ...   wn^{3(N-1)}
-% ?   ?          ?            ?         ?      ?
-% 1 wn^{N-1}  wn^{2(N-1}}  wn^{3(N-1}}  ...   wn^{(N-1)(N-1)}
+% 1     1           1            1        ...    1
+% 1   wn^1         wn^2         wn^3      ...   wn^{N-1}
+% 1   wn^2         wn^4         wn^6      ...   wn^{2(N-1)}
+% 1   wn^3         wn^6         wn^9      ...   wn^{3(N-1)}
+% ... ...          ...          ...       ...      ...
+% 1  wn^{N-1}  wn^{2(N-1}}  wn^{3(N-1}}   ...   wn^{(N-1)(N-1)}
 Matriz_fourier    = Matriz_jotas.^Matriz_expoentes;   %
 
 Xf = Matriz_fourier*gk;
 
-fprintf('\nDuracao da analise por produto matricial: ');
+fprintf('Duracao da analise por produto matricial: ');
 toc;
 
 %%%%%%%%%%%%%%%% Visualizacao do  Sinal Artificial %%%%%%%%%%%%%%%%%
