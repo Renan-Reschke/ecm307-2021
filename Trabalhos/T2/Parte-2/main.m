@@ -93,51 +93,21 @@ grid
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 6 do T2
 
-%% Formantes da vogal a
-formantes_a = csvread('csv-formantes/formantes-a.csv');
-f0_a        = formantes_a(:,1);
-f1_a        = formantes_a(:,2);
-f2_a        = formantes_a(:,3);
-formante_sexo_a = formantes_a(:,4); 
+%% Formantes da vogal /a/
+[f0_a f1_a f2_a formante_sexo_a] = formantes('csv-formantes/formantes-a.csv');
 
-%% Formantes da vogal e
-formantes_e = csvread('csv-formantes/formantes-e.csv');
-f0_e        = formantes_e(:,1);
-f1_e        = formantes_e(:,2);
-f2_e        = formantes_e(:,3);
-formante_sexo_e = formantes_e(:,4); 
+%% Formantes da vogal /e/
+[f0_e f1_e f2_e formante_sexo_e] = formantes('csv-formantes/formantes-e.csv');
 
-%% Formantes da vogal a
-formantes_i = csvread('csv-formantes/formantes-i.csv');
-f0_i        = formantes_i(:,1);
-f1_i        = formantes_i(:,2);
-f2_i        = formantes_i(:,3);
-formante_sexo_i = formantes_i(:,4); 
+%% Formantes da vogal /i/
+[f0_i f1_i f2_i formante_sexo_i] = formantes('csv-formantes/formantes-i.csv');
 
-%% Formantes da vogal a
-formantes_o = csvread('csv-formantes/formantes-o.csv');
-f0_o        = formantes_o(:,1);
-f1_o        = formantes_o(:,2);
-f2_o        = formantes_o(:,3);
-formante_sexo_o = formantes_o(:,4); 
+%% Formantes da vogal /o/
+[f0_o f1_o f2_o formante_sexo_o] = formantes('csv-formantes/formantes-o.csv');
 
-%% Formantes da vogal a
-formantes_u = csvread('csv-formantes/formantes-u.csv');
-f0_u        = formantes_u(:,1);
-f1_u        = formantes_u(:,2);
-f2_u        = formantes_u(:,3);
-formante_sexo_u = formantes_u(:,4);
+%% Formantes da vogal /u/
+[f0_u f1_u f2_u formante_sexo_u] = formantes('csv-formantes/formantes-u.csv');
 
+%% Plot do gráfico bidimensional das formantes                                                    
 fig3 = figure(3);
-scatter(f1_a, f2_a, 'filled');
-hold on;
-scatter(f1_e, f2_e, 'filled');
-scatter(f1_i, f2_i, 'filled');
-scatter(f1_o, f2_o, 'filled');
-scatter(f1_u, f2_u, 'filled');
-hold off;
-grid;
-title('Formantes')
-xlabel('Formante f1');
-ylabel('Formante f2');
-leg = legend({'Vogal /a/', 'Vogal /e/', 'Vogal /i/', 'Vogal /o/', 'Vogal /u/'}, 'FontSize', 12);
+scatter_formantes(f1_a, f2_a, f1_e, f2_e, f1_i, f2_i, f1_o, f2_o, f1_u, f2_u);
