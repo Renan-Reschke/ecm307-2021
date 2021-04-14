@@ -38,16 +38,12 @@ fprintf('Recuperando dados do sinal...\n');
 %% Recuperacao de dados da amostra
 [gk, fs] = audioread ('audio/a2.wav');          % transforma um arquivo .wav em um vetor g(k)
                                                 % recupera a taxa de amostragem - fs
-% Como o software usado pra gravação gravou em double channel, é preciso escolher um para analisar:                                                
-gk = gk(:,1);                                   % Pega apenas um canal do audio
-N       = length(gk);                           % numero de pontos do sinal em analise
-Ts      = 1/fs;                                 % tempo de amostragem
-ws      = 2*pi*fs;                              % frequencia anngular
-duracao = N*Ts;                                 % Duracao do sinal
-tempo   = linspace(0,duracao,N);                % vetor tempo computacional
-fmax    = fs/2;                                 % frequencia maxima de amostragem
-frequencia = linspace(-fmax,fmax,N);            % vetor de frequencias de Fourier
-resolucao  = fs/N;                              % resolucao em frequencia
+                                                
+[gk N Ts ws duracao tempo fmax frequencia resolucao] = resgatar_dados (gk, fs); % recupera dados importantes do sinal
+
+%% Serie discreta de Fourier
+
+fourier = fourier(gk, N);
 
 fprintf('Dados recuperados com sucesso!\n\n');
 fprintf('Tempo de duracao do sinal: %.3fs\n', duracao);
@@ -57,27 +53,15 @@ fprintf('Frequencia do sinal: %dHz\n\n', fs);
 fprintf('Item 4: Analise temporal\n');
 fprintf('\tSim, é possível observar uma periodicidade no sinal no domínio do tempo\n\tcomo pode ser observado na imagem "Figure 1".\n\n');
 
+
 %% Visualizacao do sinal no dominio do tempo
 fig1 = figure(1);
 plot(tempo,gk,'k-')                   % configura plot(x,y, cor preta)
-xlabel('Tempo em segundos')           % tempo em segundos
-ylabel('Amplitude')                   % amplitude
-title('Sinal a2.wav amostrado')       % titulo
+xlabel('Tempo em segundos')           % titulo eixo x
+ylabel('Amplitude')                   % titulo eixo y
+title('Sinal a2.wav amostrado')       % titulo do gráfico
 grid
 %saveas(fig1,'plot-sons/a2.png')       % Salva o grafico como png
-
-
-%% Serie discreta de Fourier
-fprintf('Iniciando a Serie Discreta de Fourier (matricial)\n');
-
-tic;
-wn                = exp(-1i*2*pi/N);                  % Definindo wn
-Matriz_jotas      = wn*ones(N, N);                    % Matriz NxN wn
-Matriz_expoentes  = [0:1:N-1]'*[0:1:N-1];             % Expoentes de wn
-Wn                = Matriz_jotas.^Matriz_expoentes;   % matriz wn^(expoentes)
-Xn                = Wn*gk;                            % Calculo da matriz Xn
-
-fprintf('Duracao da analise por produto matricial: ');toc;fprintf('\n');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 5 do T2
 fprintf('Item 5: Análise de Fourier\n');
@@ -86,34 +70,56 @@ fprintf('\tSim, é possível justificar a resposta do item 4 pois, como a Análise\
 
 %% Visualizacao do sinal no dominio da frequencia
 fig2 = figure(2);
-plot(frequencia,fftshift(log10(abs(Xn))),'k-');         % configura plot(x,y, cor preta)
-hold;
-formantes = identificar_formantes(frequencia, fftshift(log10(abs(Xn))));
-
-xlabel('Frequencia em Hz')                              % tempo em segundos
-ylabel('Amplitude')                                     % amplitude em volts
-title('Espectro de amplitude de a2.wav')                % titulo
+plot(frequencia,fourier,'k-');                          % configura plot(x,y, cor preta)
+xlabel('Frequencia em Hz')                              % titulo eixo x
+ylabel('Amplitude')                                     % titulo eixo y
+title('Espectro de amplitude de a2.wav')                % titulo do gráfico
 grid
 %saveas(fig2,'plot-frequencias/freq_a2.png')             % Salva o grafico como png
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 6 do T2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 6 do T2 : Formantes do banco de dados
 
 %% Formantes da vogal /a/
 [f0_a f1_a f2_a formante_sexo_a] = leitura_formantes('csv-formantes/formantes-a.csv');
+[media_f0_a media_f1_a media_f2_a] = media_formantes(f0_a, f1_a, f2_a);
 
 %% Formantes da vogal /e/
 [f0_e f1_e f2_e formante_sexo_e] = leitura_formantes('csv-formantes/formantes-e.csv');
+[media_f0_e media_f1_e media_f2_e] = media_formantes(f0_e, f1_e, f2_e);
 
 %% Formantes da vogal /i/
 [f0_i f1_i f2_i formante_sexo_i] = leitura_formantes('csv-formantes/formantes-i.csv');
+[media_f0_i media_f1_i media_f2_i] = media_formantes(f0_i, f1_i, f2_i);
 
 %% Formantes da vogal /o/
 [f0_o f1_o f2_o formante_sexo_o] = leitura_formantes('csv-formantes/formantes-o.csv');
+[media_f0_o media_f1_o media_f2_o] = media_formantes(f0_o, f1_o, f2_o);
 
 %% Formantes da vogal /u/
 [f0_u f1_u f2_u formante_sexo_u] = leitura_formantes('csv-formantes/formantes-u.csv');
+[media_f0_u media_f1_u media_f2_u] = media_formantes(f0_u, f1_u, f2_u);
 
-%% Plot do gráfico bidimensional das formantes                                                    
+%% Plot do gráfico bidimensional das formantes f1 e f2                                                    
 fig3 = figure(3);
 scatter_formantes(f1_a, f2_a, f1_e, f2_e, f1_i, f2_i, f1_o, f2_o, f1_u, f2_u);
+title('Formantes')
+xlabel('Formante f1 [Hz]');
+ylabel('Formante f2 [Hz]');
+leg = legend({'Vogal /a/', 'Vogal /e/', 'Vogal /i/', 'Vogal /o/', 'Vogal /u/'}, 'FontSize', 12);    
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 7 do T2
+formantes = identificar_formantes(frequencia, fourier);     % Reconhece automaticamente f0, f1 e f2
+print_formantes(formantes);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Vogais de teste para verificar o programa
+
+vetor_testes = [];  % 0 - Errou; 1 - Acertou
+% Teste vogal /a/
+teste_vogal('audio-teste/a-teste.wav');
+teste_vogal('audio-teste/e-teste.wav');
+teste_vogal('audio-teste/i-teste.wav');
+teste_vogal('audio-teste/o-teste.wav');
+teste_vogal('audio-teste/u-teste.wav');

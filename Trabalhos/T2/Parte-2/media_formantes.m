@@ -1,0 +1,1 @@
+function [media_f0 media_f1 media_f2] = media_formantes(f0, f1, f2)  media_f0 = mean(f0);  media_f1 = mean(f1);  media_f2 = mean(f2);endfunction
