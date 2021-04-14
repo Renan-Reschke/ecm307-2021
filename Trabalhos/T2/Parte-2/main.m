@@ -31,13 +31,15 @@ warning('off')
 
 %% Inicializacao do programa
 fprintf('Iniciando o programa...\n');
-fprintf('Sinal analisado: a1.wav\n\n');
+fprintf('Sinal analisado: a2.wav\n\n');
 fprintf('Tipo: Discreto\n\n');
 fprintf('Recuperando dados do sinal...\n');
 
 %% Recuperacao de dados da amostra
-[gk, fs] = audioread ('audio/a1.wav');          % transforma um arquivo .wav em um vetor g(k)
+[gk, fs] = audioread ('audio/a2.wav');          % transforma um arquivo .wav em um vetor g(k)
                                                 % recupera a taxa de amostragem - fs
+% Como o software usado pra gravação gravou em double channel, é preciso escolher um para analisar:                                                
+gk = gk(:,1);                                   % Pega apenas um canal do audio
 N       = length(gk);                           % numero de pontos do sinal em analise
 Ts      = 1/fs;                                 % tempo de amostragem
 ws      = 2*pi*fs;                              % frequencia anngular
@@ -60,9 +62,9 @@ fig1 = figure(1);
 plot(tempo,gk,'k-')                   % configura plot(x,y, cor preta)
 xlabel('Tempo em segundos')           % tempo em segundos
 ylabel('Amplitude')                   % amplitude
-title('Sinal a1.wav amostrado')       % titulo
+title('Sinal a2.wav amostrado')       % titulo
 grid
-%saveas(fig1,'plot-sons/a1.png')       % Salva o grafico como png
+%saveas(fig1,'plot-sons/a2.png')       % Salva o grafico como png
 
 
 %% Serie discreta de Fourier
@@ -81,32 +83,36 @@ fprintf('Duracao da analise por produto matricial: ');toc;fprintf('\n');
 fprintf('Item 5: Análise de Fourier\n');
 fprintf('\tSim, é possível justificar a resposta do item 4 pois, como a Análise\n\tde Fourier demonstra na imagem "Figure 2", existem harmônicas presentes no sinal.\n\n');
 
+
 %% Visualizacao do sinal no dominio da frequencia
 fig2 = figure(2);
-plot(frequencia,fftshift(log10(abs(Xn))),'k-')          % configura plot(x,y, cor preta)
+plot(frequencia,fftshift(log10(abs(Xn))),'k-');         % configura plot(x,y, cor preta)
+hold;
+formantes = identificar_formantes(frequencia, fftshift(log10(abs(Xn))));
+
 xlabel('Frequencia em Hz')                              % tempo em segundos
 ylabel('Amplitude')                                     % amplitude em volts
-title('Espectro de amplitude de a1.wav')                % titulo
+title('Espectro de amplitude de a2.wav')                % titulo
 grid
-%saveas(fig2,'plot-frequencias/freq_a1.png')             % Salva o grafico como png
+%saveas(fig2,'plot-frequencias/freq_a2.png')             % Salva o grafico como png
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 6 do T2
 
 %% Formantes da vogal /a/
-[f0_a f1_a f2_a formante_sexo_a] = formantes('csv-formantes/formantes-a.csv');
+[f0_a f1_a f2_a formante_sexo_a] = leitura_formantes('csv-formantes/formantes-a.csv');
 
 %% Formantes da vogal /e/
-[f0_e f1_e f2_e formante_sexo_e] = formantes('csv-formantes/formantes-e.csv');
+[f0_e f1_e f2_e formante_sexo_e] = leitura_formantes('csv-formantes/formantes-e.csv');
 
 %% Formantes da vogal /i/
-[f0_i f1_i f2_i formante_sexo_i] = formantes('csv-formantes/formantes-i.csv');
+[f0_i f1_i f2_i formante_sexo_i] = leitura_formantes('csv-formantes/formantes-i.csv');
 
 %% Formantes da vogal /o/
-[f0_o f1_o f2_o formante_sexo_o] = formantes('csv-formantes/formantes-o.csv');
+[f0_o f1_o f2_o formante_sexo_o] = leitura_formantes('csv-formantes/formantes-o.csv');
 
 %% Formantes da vogal /u/
-[f0_u f1_u f2_u formante_sexo_u] = formantes('csv-formantes/formantes-u.csv');
+[f0_u f1_u f2_u formante_sexo_u] = leitura_formantes('csv-formantes/formantes-u.csv');
 
 %% Plot do gráfico bidimensional das formantes                                                    
 fig3 = figure(3);
