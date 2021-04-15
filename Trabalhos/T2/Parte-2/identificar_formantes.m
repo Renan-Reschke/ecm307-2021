@@ -1,7 +1,7 @@
 %
 %
 %
-%     Função que plota pontos de pico em um gráfico (x,y)
+%     Função que identifica as formantes de um sinal
 %
 %
 %
