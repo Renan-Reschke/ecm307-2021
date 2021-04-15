@@ -31,12 +31,12 @@ warning('off')
 
 %% Inicializacao do programa
 fprintf('Iniciando o programa...\n');
-fprintf('Sinal analisado: a2.wav\n\n');
+fprintf('Sinal analisado: o2.wav\n\n');
 fprintf('Tipo: Discreto\n\n');
 fprintf('Recuperando dados do sinal...\n');
 
 %% Recuperacao de dados da amostra
-[gk, fs] = audioread ('audio/a2.wav');          % transforma um arquivo .wav em um vetor g(k)
+[gk, fs] = audioread ('audio/o2.wav');          % transforma um arquivo .wav em um vetor g(k)
                                                 % recupera a taxa de amostragem - fs
                                                 
 [gk N Ts ws duracao tempo fmax frequencia resolucao] = resgatar_dados (gk, fs); % recupera dados importantes do sinal
@@ -47,7 +47,12 @@ fourier = fourier(gk, N);
 
 fprintf('Dados recuperados com sucesso!\n\n');
 fprintf('Tempo de duracao do sinal: %.3fs\n', duracao);
-fprintf('Frequencia do sinal: %dHz\n\n', fs);
+fprintf('Frequencia do sinal: %dHz\n', fs);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 7 do T2
+formantes = identificar_formantes(frequencia, fourier);     % Reconhece automaticamente f0, f1 e f2
+print_formantes(formantes);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fprintf('\n');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 4 do T2
 fprintf('Item 4: Analise temporal\n');
@@ -59,9 +64,9 @@ fig1 = figure(1);
 plot(tempo,gk,'k-')                   % configura plot(x,y, cor preta)
 xlabel('Tempo em segundos')           % titulo eixo x
 ylabel('Amplitude')                   % titulo eixo y
-title('Sinal a2.wav amostrado')       % titulo do gráfico
+title('Sinal o2.wav amostrado')       % titulo do gráfico
 grid
-%saveas(fig1,'plot-sons/a2.png')       % Salva o grafico como png
+%saveas(fig1,'plot-sons/o2.png')       % Salva o grafico como png
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 5 do T2
 fprintf('Item 5: Análise de Fourier\n');
@@ -70,16 +75,18 @@ fprintf('\tSim, é possível justificar a resposta do item 4 pois, como a Análise\
 
 %% Visualizacao do sinal no dominio da frequencia
 fig2 = figure(2);
-plot(frequencia,fourier,'k-');                          % configura plot(x,y, cor preta)
+plot(frequencia,fourier,'k-');hold on;                       % configura plot(x,y, cor preta)
+identificar_formantes(frequencia, fourier);
 xlabel('Frequencia em Hz')                              % titulo eixo x
 ylabel('Amplitude')                                     % titulo eixo y
-title('Espectro de amplitude de a2.wav')                % titulo do gráfico
+title('Espectro de amplitude de o2.wav')                % titulo do gráfico
 grid
-%saveas(fig2,'plot-frequencias/freq_a2.png')             % Salva o grafico como png
+%saveas(fig2,'plot-frequencias/freq_o2.png')             % Salva o grafico como png
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 6 do T2 : Formantes do banco de dados
-
+fprintf('Item 6: Plot (f1, f2)\n');
+fprintf('\tA plotagem dos pontos pode ser visualizada na imagem "Figure 3"\n\n');
 %% Formantes da vogal /a/
 [f0_a f1_a f2_a formante_sexo_a] = leitura_formantes('csv-formantes/formantes-a.csv');
 [media_f0_a media_f1_a media_f2_a] = media_formantes(f0_a, f1_a, f2_a);
@@ -107,19 +114,38 @@ title('Formantes')
 xlabel('Formante f1 [Hz]');
 ylabel('Formante f2 [Hz]');
 leg = legend({'Vogal /a/', 'Vogal /e/', 'Vogal /i/', 'Vogal /o/', 'Vogal /u/'}, 'FontSize', 12);    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Item 7 do T2
-formantes = identificar_formantes(frequencia, fourier);     % Reconhece automaticamente f0, f1 e f2
-print_formantes(formantes);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fprintf('Fim da análise de um dos áudios que está incluso na base de dados\n');
+fprintf('Início dos testes para áudios gravados por pessoas externas ao grupo de aprendizado...\n');
 
 %% Vogais de teste para verificar o programa
+vetor_testes = [];  % Armazena o resultado dos testes para os audios [/a/ /e/ /i/ /o/ /u/]
+                    % 0 - Errou; 1 - Acertou
 
-vetor_testes = [];  % 0 - Errou; 1 - Acertou
 % Teste vogal /a/
-teste_vogal('audio-teste/a-teste.wav');
-teste_vogal('audio-teste/e-teste.wav');
-teste_vogal('audio-teste/i-teste.wav');
-teste_vogal('audio-teste/o-teste.wav');
-teste_vogal('audio-teste/u-teste.wav');
+fprintf('Início do teste para a vogal /a/:\n');
+vetor_testes(1) = teste_vogal('audio-teste/a-teste.wav', 'a');
+acertou(vetor_testes(1));
+
+% Teste vogal /e/
+fprintf('Início do teste para a vogal /e/:\n');
+vetor_testes(2) = teste_vogal('audio-teste/e-teste.wav', 'e');
+acertou(vetor_testes(2));
+
+% Teste vogal /i/
+fprintf('Início do teste para a vogal /i/:\n');
+vetor_testes(3) = teste_vogal('audio-teste/i-teste.wav', 'i');
+acertou(vetor_testes(3));
+
+% Teste vogal /o/
+fprintf('Início do teste para a vogal /o/:\n');
+vetor_testes(4) = teste_vogal('audio-teste/o-teste.wav', 'o');
+acertou(vetor_testes(4));
+% Teste vogal /u/
+fprintf('Início do teste para a vogal /u/:\n');
+vetor_testes(5) = teste_vogal('audio-teste/u-teste.wav', 'u');
+acertou(vetor_testes(5));
+
+  

@@ -22,7 +22,7 @@ function formantes = identificar_formantes (frequencia, sinal)
   y_aprox = ppval(interpolacao, x);
   [pks2, idx2] = findpeaks(y_aprox, 'DoubleSided', 'MinPeakHeight', 1.15);
   
-  x_formantes = [];  y_formantes = [];  i = 1;
+  x_formantes = [];  y_formantes = [];  i = 1;    % possíveis formantes
   for k=1:length(x(idx2))
     if y_aprox(idx2)(k)>0
       x_formantes(i) = x(idx2)(k);
