@@ -8,6 +8,7 @@
 clear all;
 clc;
 close all;
+warning('off');
 
 %%% pacote simbólico
 
@@ -20,7 +21,7 @@ pkg load symbolic;                                    % Somente para os que usam
 %% g1(t) -  derivada de g(t)
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+tic;
 %%% criando g(t)
 
 To    = 100;                % período de 100 segundos
@@ -45,8 +46,6 @@ g1n    = @(t) -2;        % constante negativa
  fmax = 10;                 % frequência máxima de Fourier
  N    = fmax/fo;            % Número de harmônicas da análise
                             % -10Hz --> 10Hz - escolha
- n    = [-N:1:N];           % índice de cada harmônica
- f    = n*fo;               % vetor de frequências da análise de Fourier
 
 %%% Vetor tempo para visualização do sinal
 %%% diferente da variável simbólica t
@@ -82,20 +81,22 @@ D_o1 = inv(To)*int(g1p,t,ti,0) + inv(To)*int(g1n,t,0,tf);
 
 %%% Determinando o termo Dn numericamente
 
-n=[-N:1:N];
+ n    = [-N:1:N];           % índice de cada harmônica
+ f    = n*fo;               % vetor de frequências da análise de Fourier
 
 %%% Triangular
 
 Dn = eval(Dn);
-D_o = eval(D_o) ;     % Corrigindo o valor médio (NaN devido a indeterminação)
-Dn(N+1) = D_o ;       % Subistituindo no vetor de respostas
+display('passou.................')
+D_o = eval(D_o);% Corrigindo o valor médio (NaN devido a indeterminação)
+Dn(N+1) = D_o;% Subistituindo no vetor de respostas
 
 %%% Derivada
  
 Dn1 = eval(Dn1);
-D_o1 = eval(D_o1) ;     % Corrigindo o valor médio (NaN devido a indeterminação)
-Dn1(N+1) = D_o1 ;       % Subistituindo no vetor de respostas
-
+D_o1 = eval(D_o1);     % Corrigindo o valor médio (NaN devido a indeterminação)
+Dn1(N+1) = D_o1;       % Subistituindo no vetor de respostas
+display('passou.................')
 
 %% Visualizando o espectro de Amplitude
  
@@ -111,6 +112,7 @@ title('Serie de Fourier da derivada de g(t) -- To = 100s');
 xlabel('Frequencia em Hz');
 ylabel('Amplitude em  volts')
 saveas(fig1,'Serie de Fourier da derivada de g(t).png');
+display('passou.................')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 3 - Sintese de Fourier
 %% 
@@ -171,3 +173,4 @@ title('Ganho do sistema de derivada');
 xlabel('Frequencia em Hz');
 ylabel('Ganho do sistema de derivada');
 saveas(fig4,'Ganho do sistema de derivada1.png');
+tac;
